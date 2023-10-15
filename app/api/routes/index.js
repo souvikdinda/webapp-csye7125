@@ -1,8 +1,13 @@
 import healthRouter from './health-router.js';
+import usersRouter from './users-router.js';
 import os from 'os';
 
 export const healthCheck = (app) => {
     app.use('/healthz', healthRouter);
+}
+
+export const userData = (app) => {
+    app.use('/v1/user', usersRouter);
 }
 
 export const currentDateTime = (app) => {
