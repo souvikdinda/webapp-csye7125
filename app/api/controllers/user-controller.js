@@ -64,12 +64,12 @@ const setError = (errorCode, res, next) => {
 export const getAll = async (req, res, next) => {
     logger.info(`/GETALL/UserController/Initiated`)
     const response = await userService.getAllUsers();
-    if(response) {
+    if(Object.keys(response)[0] == 'error') {
+        logger.error(`/GETALL/UserController/Failed with error 503`)
+        setError(503, res, next);  
+    } else {
         logger.info(`/GETALL/UserController/Success`)
         setSuccess(res, response);
-    } else {
-        logger.error(`/GETALL/UserController/Failed with error 503`)
-        setError(503, res, next);
     }
 }
 

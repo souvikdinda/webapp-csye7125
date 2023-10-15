@@ -21,8 +21,6 @@ export const authenticateUser = async (username, password) => {
 export const getAllUsers = async () => {
     try {
         const response = await User.findAll({attributes: {exclude: ['password']}});
-        const res = response;
-        console.log(res)
         return response;
     } catch(error) {
         logger.error(`UserService: ${error}`)
