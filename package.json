@@ -23,5 +23,10 @@
     "nodemon": "^3.0.1",
     "sequelize": "^6.33.0",
     "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^9.2.1",
+    "semantic-release": "^22.0.5"
   }
 }
