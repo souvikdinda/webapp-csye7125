@@ -1,8 +1,7 @@
 FROM node:18-alpine
 WORKDIR /webapp
 COPY package*.json ./
-RUN ls -al
-RUN npm install --verbose
+RUN npm install
 RUN echo "PORT=8080" >> .env
 COPY . .
 EXPOSE 8080
