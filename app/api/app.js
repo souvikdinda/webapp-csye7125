@@ -26,7 +26,7 @@ app.all('*', (req, res, next) => {
 });
 
 routes.healthCheck(app);
-routes.userData(app);
+// routes.userData(app);
 routes.currentDateTime(app);
 
 sequelize.sync({alter: false, force: false}).then((data) => {
