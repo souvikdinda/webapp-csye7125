@@ -1,13 +1,6 @@
 # # WEBAPP project
 **_This project contains RESTful Web Application that allows Users to create multiple products and each product can have multiple images_**
 
-## Web Application:
-> Technologies Used: NodeJS, ExpressJS, Sequelize ORM
-> Database: MySQL
-> Libraries Used: Bcrypt (password encryption), dotenv, mysql2, chai & mocha (testing), aws-sdk, multer (middleware for uploading files), statsd (monitoring), winston (logging)
-
-_This application can be hosted on AWS **EC2**, MySQL on **RDS**, **S3** bucket to store images, **Cloudwatch** to view monitoring metrics and application logs
-
 ### Prerequisite to run the application:
 *NodeJS*: v20.0.0
 
