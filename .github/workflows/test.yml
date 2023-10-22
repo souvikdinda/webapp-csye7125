@@ -10,6 +10,18 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: csye7125
+          POSTGRES_PASSWORD: mysecretpassword
+          POSTGRES_DB: postgres
+          POSTGRES_SCHEMA: app
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js
@@ -22,15 +34,13 @@ jobs:
 
       - name: Setup Database
         run: |
-          sudo apt install mariadb-server
-          sudo mysql -uroot -e "ALTER USER 'root'@'localhost' IDENTIFIED BY 'password';FLUSH PRIVILEGES;"
-          sudo mysql -uroot -ppassword -e "CREATE DATABASE IF NOT EXISTS csye7125;"
           echo "PORT=8080" > .env
-          echo "DB_USERNAME=root" >> .env
-          echo "DB_PASSWORD=password" >> .env
+          echo "DB_USERNAME=csye7125" >> .env
+          echo "DB_PASSWORD=mysecretpassword" >> .env
           echo "DB_HOSTNAME=localhost" >> .env
-          echo "DB_PORT=3306" >> .env
-          echo "DB_DBNAME=csye7125" >> .env
+          echo "DB_PORT=5432" >> .env
+          echo "DB_DBNAME=postgres" >> .env
+          echo "DB_SCHEMA=app" >> .env
 
       - name: test
         run: npm run test
