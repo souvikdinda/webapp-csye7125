@@ -6,7 +6,7 @@ import * as routes from "./routes/index.js";
 
 const app = express();
 app.use(express.json());
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 app.use((err, req, res, next) => {
@@ -17,17 +17,20 @@ app.use((err, req, res, next) => {
     }
 });
 
-app.all('*', (req, res, next) => {
-    if (req.originalUrl === '/' || req.originalUrl.startsWith('/healthz') || req.originalUrl.startsWith('/v1')) {
-        next();
-    } else {
-        res.status(404).json();
-    }
-});
+// app.all('*', (req, res, next) => {
+//     if (req.originalUrl === '/' || req.originalUrl.startsWith('/healthz') || req.originalUrl.startsWith('/v1')) {
+//         next();
+//     } else {
+//         res.status(404).json();
+//     }
+// });
 
 routes.healthCheck(app);
-// routes.userData(app);
-routes.currentDateTime(app);
+routes.httpCheck(app);
+// routes.currentDateTime(app);
+app.use((req, res, next) => {
+    res.status(404).json();
+});
 
 sequelize.sync({alter: false, force: false}).then((data) => {
     logger.info("Database connection established")
