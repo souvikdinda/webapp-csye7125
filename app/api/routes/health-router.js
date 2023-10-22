@@ -11,4 +11,9 @@ Router.route('/').all((req,res) => {
     res.status(405).json();
 })
 
+Router.route('/:id').all((req,res) => {
+    res.status(405).json();
+})
+
+
 export default Router;
