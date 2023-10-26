@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import sequelize from "./index.js";
 
-const HttpCheck = sequelize.define('HttpCheck', {
+const httpcheck = sequelize.define('httpcheck', {
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
@@ -69,4 +69,4 @@ const HttpCheck = sequelize.define('HttpCheck', {
     freezeTableName: true
 });
 
-export default HttpCheck;
+export default httpcheck;
