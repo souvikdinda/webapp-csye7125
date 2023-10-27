@@ -37,9 +37,31 @@ export const getAll = async (req, res, next) => {
 
 // Get method
 export const getById  = async (req, res, next) => {
+
     logger.info(`/GET/HTTPController/Initiated`)
-    res.status(200).json();
-    
+    if (req.body && Object.keys(req.body).length > 0 ||
+    req.query && Object.keys(req.query).length > 0 || Object.keys(req.params).length > 0) {
+        res.status(400).json();
+    } else {
+        try {
+            if(checkConnection()) {
+                const Data = await httpCheckService.getHttpCheck(req.params.id);
+                if(Object.keys(Data)[0] === 'error') {
+                    return res.status(404).json({ error: 'Resource not found' });
+                } else
+                if (Data) {
+                    return res.status(200).json(Data);
+                } else {
+                    return res.status(404).json({ error: 'Resource not found' });
+                }
+            } else {
+                return res.status(503).json();
+            }
+        } catch (error) {
+            return next(error);
+        }
+    }
+
 }
 
 
