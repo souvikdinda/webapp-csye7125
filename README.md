@@ -19,15 +19,16 @@
 **_Health Check_**
 **GET** https://{domainName}/healthz
 
-**_User Data_**
-**GET** https://{domainName}/v1/user/{userId} 
-    *Note: Username, Password is required for authentication*
+**_Http Check_**
+**GET** https://{domainName}/v1/http-check/{id} 
 
-**POST** https://{domainName}/v1/user 
-    *first_name, last_name, password, username is expected in payload*
+**GET ALL** https://{domainName}/v1/http-check/
 
-**PUT** https://{domainName}/v1/user/{userId}
-    *first_name, last_name, password can be updated*
+**POST** https://{domainName}/v1/http-check
+
+**PUT** https://{domainName}/v1/http-check/{id}
+
+**DELETE** https://{domainName}/v1/http-check/{id}
 
 
 ## Continuous Integration
