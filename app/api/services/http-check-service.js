@@ -13,6 +13,20 @@ export const getAllHttpChecks = async () => {
     }
 }
 
+export const checkIfHttpCheckExists = async (name) => {
+    try {
+        const response = await httpcheck.findOne({where: {name}});
+        if(response) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch(error) {
+        logger.error(`HTTP Check Service: ${error}`)
+        return {error: error}
+    }
+}
+
 
 export const getHttpCheck = async (id) => {
     try {
