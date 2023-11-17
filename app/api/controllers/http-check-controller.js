@@ -1,7 +1,8 @@
 import * as httpCheckService from '../services/http-check-service.js';
 import * as healthService from '../services/health-check-service.js';
+import * as customResourceService from '../services/k8s-service.js'
+import axios from 'axios';
 import logger from '../logger/index.js';
-import { DataTypes } from 'sequelize';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -40,7 +41,7 @@ export const getById  = async (req, res, next) => {
 
     logger.info(`/GET/HTTPController/Initiated`)
     if (req.body && Object.keys(req.body).length > 0 ||
-    req.query && Object.keys(req.query).length > 0 || Object.keys(req.params).length > 0) {
+    req.query && Object.keys(req.query).length > 0) {
         res.status(400).json();
     } else {
         try {
@@ -110,8 +111,25 @@ export const post = async (req, res, next) => {
         }
 
         try {
+            new URL(req.body.uri);
+        } catch (error) {
+            return res.status(400).json({ error: 'Invalid URI' });
+        }
+
+        try {
+            await axios.head(req.body.uri);
+        } catch (error) {
+            return res.status(400).json({ error: 'URI does not exist' });
+        }
+
+        try {
+            const checkIfHttpCheckExists = await httpCheckService.checkIfHttpCheckExists(req.body.name);
+            if(checkIfHttpCheckExists) {
+                return res.status(409).json({ error: 'Resource already exists' });
+            }
             const savedData = await httpCheckService.saveHttpCheck(req.body);
             if (savedData) {
+                const newCR = await customResourceService.createHttpCheckResource(req.body);
                 return res.status(201).json(savedData);
             } else {
                 return res.status(503).json();
@@ -163,12 +181,37 @@ export const update = async (req, res, next) => {
         }
 
         try {
+            new URL(req.body.uri);
+        } catch (error) {
+            return res.status(400).json({ error: 'Invalid URI' });
+        }
+
+        try {
+            await axios.head(req.body.uri);
+        } catch (error) {
+            return res.status(400).json({ error: 'URI does not exist' });
+        }
+
+        try {
             if(checkConnection()) {
+                const getHttpCheck = await httpCheckService.getHttpCheck(req.params.id);
+                if(Object.keys(getHttpCheck)[0] === 'error') {
+                    return res.status(404).json({ error: 'Resource not found' });
+                }
+
+                if (getHttpCheck.name !== req.body.name) {
+                    return res.status(409).json({ error: 'Name can not be changed' });
+                }
+
                 const updatedData = await httpCheckService.updateHttpCheck(req.params.id, req.body);
                 if(Object.keys(updatedData)[0] === 'error') {
                     return res.status(404).json({ error: 'Resource not found' });
                 } else
                 if (updatedData) {
+                    const newCR = await customResourceService.updateHttpCheckResource(req.body);
+                    if(newCR) {
+                        logger.info('CR updated');
+                    }
                     return res.status(200).json(updatedData);
                 } else {
                     return res.status(404).json({ error: 'Resource not found' });
@@ -190,10 +233,13 @@ export const deleteHttpCheck = async (req, res, next) => {
     try {
         const id = req.params.id;
         if(checkConnection()) {
+            const Data = await httpCheckService.getHttpCheck(id);
+            const name = Data.name;
             const response = await httpCheckService.deleteHttpCheck(id);
             if(Object.keys(response)[0] === 'error') {
                 return res.status(404).json({ error: 'Resource not found' });
             } else if (response) {
+                const deleteCR = await customResourceService.deleteHttpCheckResource(name);
                 return res.status(204).end();
             } else {
                 return res.status(404).json({ error: 'Resource not found' });
@@ -205,4 +251,4 @@ export const deleteHttpCheck = async (req, res, next) => {
         return next(error);
     }
 };
-  
+
