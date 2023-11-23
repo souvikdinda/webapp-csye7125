@@ -9,7 +9,7 @@ const k8sApi = kc.makeApiClient(CustomObjectsApi);
 const group = 'csye7125-fall2023-group07.operator.souvikdinda.me';
 const version = 'v1';
 const plural = 'httpchecks';
-const namespace = 'default';
+const namespace = 'webapp-operator-system';
 
 export const createHttpCheckResource = async (data) => {
     const body = {
