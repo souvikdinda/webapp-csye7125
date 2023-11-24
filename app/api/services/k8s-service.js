@@ -36,7 +36,7 @@ export const createHttpCheckResource = async (data) => {
         const existingCR = await checkExistingCR(data.name);
         if (!existingCR) {
             const response = await k8sApi.createNamespacedCustomObject(group, version, namespace, plural, body);
-            logger.info(`HttpCheck created/updated with name httpcheck-${data.name}`);
+            logger.info(`HttpCheck created/updated named httpcheck-${data.name}`);
             return response.body;
         }
     } catch (error) {
