@@ -1,5 +1,7 @@
 import k8s, { CustomObjectsApi } from '@kubernetes/client-node';
 import logger from '../logger/index.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 const kc = new k8s.KubeConfig();
 kc.loadFromDefault();
@@ -9,7 +11,7 @@ const k8sApi = kc.makeApiClient(CustomObjectsApi);
 const group = 'csye7125-fall2023-group07.operator.souvikdinda.me';
 const version = 'v1';
 const plural = 'httpchecks';
-const namespace = 'webapp-operator-system';
+const namespace = process.env.CR_NAMESPACE;
 
 export const createHttpCheckResource = async (data) => {
     const body = {
