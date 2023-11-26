@@ -22,6 +22,7 @@ pipeline {
                     releaseTag = sh(returnStdout: true, script: 'git describe --tags --abbrev=0').trim()
                     echo "Release tag is ${releaseTag}"
                     sh "docker build -t quay.io/csye-7125/webapp:${releaseTag} ."
+                    // Tag the Docker image as latest
                     sh "docker tag quay.io/csye-7125/webapp:${releaseTag} quay.io/csye-7125/webapp:latest"
                 }
             }
@@ -37,6 +38,7 @@ pipeline {
 
                     // Push the Docker image to Quay.io
                     sh "docker push quay.io/csye-7125/webapp:${releaseTag}"
+                    // Push the Docker image tagged as latest to Quay.io
                     sh "docker push quay.io/csye-7125/webapp:latest"
                 }
             }
