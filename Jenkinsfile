@@ -35,7 +35,6 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'quay_credentials', usernameVariable: 'QUAY_USERNAME', passwordVariable: 'QUAY_PASSWORD')]) {
                         sh "docker login -u $QUAY_USERNAME -p $QUAY_PASSWORD quay.io"
                     }
-
                     // Push the Docker image to Quay.io
                     sh "docker push quay.io/csye-7125/webapp:${releaseTag}"
                     sh "docker push quay.io/csye-7125/webapp:latest"
