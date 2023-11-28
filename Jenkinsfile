@@ -16,12 +16,22 @@ pipeline {
             }
         }
 
+        stage('Semantic-Release') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'github_token', usernameVariable: 'GH_USERNAME', passwordVariable: 'GH_TOKEN')]) {
+                        env.GIT_LOCAL_BRANCH = 'main'
+                        sh "npx semantic-release"
+                    }
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
                     releaseTag = sh(returnStdout: true, script: 'git describe --tags --abbrev=0').trim()
                     echo "Release tag is ${releaseTag}"
-                    // Build the Docker image
                     sh "docker build -t quay.io/csye-7125/webapp:${releaseTag} ."
                     sh "docker tag quay.io/csye-7125/webapp:${releaseTag} quay.io/csye-7125/webapp:latest"
                 }
@@ -35,6 +45,7 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'quay_credentials', usernameVariable: 'QUAY_USERNAME', passwordVariable: 'QUAY_PASSWORD')]) {
                         sh "docker login -u $QUAY_USERNAME -p $QUAY_PASSWORD quay.io"
                     }
+
                     // Push the Docker image to Quay.io
                     sh "docker push quay.io/csye-7125/webapp:${releaseTag}"
                     sh "docker push quay.io/csye-7125/webapp:latest"
