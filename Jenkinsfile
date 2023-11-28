@@ -23,6 +23,7 @@ pipeline {
                         env.GIT_LOCAL_BRANCH = 'main'
                         sh "mv release.config.js release.config.cjs"
                         sh "npm install @semantic-release/commit-analyzer@8.0.1"
+                        sh "npm install @semantic-release/git@9.0.1"
                         sh "npx semantic-release"
                     }
                 }
