@@ -22,6 +22,7 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'github_token', usernameVariable: 'GH_USERNAME', passwordVariable: 'GH_TOKEN')]) {
                         env.GIT_LOCAL_BRANCH = 'main'
                         sh "mv release.config.js release.config.cjs"
+                        sh "npm install @semantic-release/commit-analyzer@8.0.1"
                         sh "npx semantic-release"
                     }
                 }
