@@ -6,7 +6,6 @@ import logger from '../logger/index.js';
 import dotenv from 'dotenv';
 dotenv.config();
 
-
 const checkConnection = async () => {
     const checkConnection = await healthService.checkConnection();
     if (checkConnection) {
@@ -117,7 +116,7 @@ export const post = async (req, res, next) => {
         }
 
         try {
-            await axios.head(req.body.uri);
+            await axios.get(req.body.uri);
         } catch (error) {
             return res.status(400).json({ error: 'URI does not exist' });
         }
@@ -187,7 +186,7 @@ export const update = async (req, res, next) => {
         }
 
         try {
-            await axios.head(req.body.uri);
+            await axios.get(req.body.uri);
         } catch (error) {
             return res.status(400).json({ error: 'URI does not exist' });
         }
